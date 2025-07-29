@@ -9,6 +9,8 @@ function App() {
     <MainView />
     </>
 
+    /*NEW FUNCTIONS FOR TOMORROW!!!!*/ 
+
 
 
   )
