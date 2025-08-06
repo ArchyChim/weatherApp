@@ -9,7 +9,7 @@ function App() {
     <MainView />
     </>
 
-    /*NEW FUNCTIONS FOR TOMORROW!!!!*/ 
+    /*Try to add IA for the App!*/ 
 
 
 
