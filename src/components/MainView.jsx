@@ -1,4 +1,6 @@
 import React, { useState } from "react"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSearch, faSpinner } from '@fortawesome/free-solid-svg-icons'
 
 function  MainView () {
    const [city, setCity] = useState("");
@@ -57,32 +59,25 @@ function  MainView () {
                />
 
                <span className="search-icon" onClick={fetchWeather}>
-                  {isLoading ? "⏳": "🔍"}
+                  <FontAwesomeIcon icon={isLoading ? faSpinner: faSearch} spin={isLoading}/>
                </span> 
 
             </div>
 
-
             {weather && (
-               <div className="weather-card">
 
-                  <div className="location">
-                     <h2 className="city">{weather.city}</h2>
-                  </div>
-
-                  <div className="weather-data">
-
-                     <img src={weather.icon} alt={weather.description} className="weather-icon" />
-                     <p className="temperature">{weather.temp}°C</p>
-                     <p className="description">{weather.description}</p>
-                     <p className="humidity">Humedad: {weather.humidity}%</p>
-                  </div>
+               <div className="weather-data">
+            
+                  <h2 className="city">{weather.city}</h2>
+                  <img src={weather.icon} alt={weather.description} className="weather-icon" />
+                  <p className="temperature">{weather.temp}°C</p>
+                  <p className="description">{weather.description}</p>
+                  <p className="humidity">Humedad: {weather.humidity}%</p>
+                  
                </div>
             )}
 
          </div>
-
-   
       
       </div>
   );
