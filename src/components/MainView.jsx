@@ -1,6 +1,8 @@
 import React, { useState } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faSpinner } from '@fortawesome/free-solid-svg-icons'
+import ReactCountryFlag from "react-country-flag";
+import axios from "axios";
 
 function  MainView () {
    const [city, setCity] = useState("");
@@ -18,12 +20,22 @@ function  MainView () {
 
          if (!response.ok) throw new Error ("Ciudad no encontrada");
          const data = await response.json();
+         console.log("Datos recibidos: ", data);
+
+         const countryRes = await axios.get(
+            `https://restcountries.com/v3.1/name/${encodeURIComponent(data.location.country)}?fullText=true`
+         );
+
+         const countryCode = countryRes.data[0]?.cca2 || "";
+
          setWeather({
             city: data.location.name,
+            country: data.location.country,
+            countryCode: countryCode,
             temp: data.current.temp_c,
             description: data.current.condition.text,
             humidity: data.current.humidity,
-            icon: data.current.condition.icon
+            icon: "https:" + data.current.condition.icon
          });
          setError(null);
       } catch(err) {
@@ -68,19 +80,37 @@ function  MainView () {
 
                <div className="weather-data">
             
-                  <h2 className="city">{weather.city}</h2>
+                  <h2 className="city">{weather.city} {weather.countryCode && (
+                     <ReactCountryFlag
+                        countryCode={weather.countryCode}
+                        svg
+                        style={{
+                           width: "30px",
+                           height: "24px",
+                           marginLeft: "8px",
+                           borderRadius: "3px"
+                        }}
+                        title={weather.country}
+                     />
+                  )}
+                  </h2>
                   <img src={weather.icon} alt={weather.description} className="weather-icon" />
                   <p className="temperature">{weather.temp}°C</p>
-                  <p className="description">{weather.description}</p>
-                  <p className="humidity">Humedad: {weather.humidity}%</p>
-                  
+                  <div className="other-data">
+                     <p className="description">{weather.description}</p>
+                     <p className="humidity">Humedad: {weather.humidity}%</p>
+                  </div>
                </div>
+            )}
+
+            {error && (
+               <p className="error">{error}</p>
             )}
 
          </div>
       
       </div>
-  );
+   );
 
 }
 
