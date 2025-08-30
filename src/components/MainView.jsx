@@ -15,7 +15,7 @@ function  MainView () {
       try {
          const API_KEY = "379a02cbe90444e4abf15914252607";
          const response = await fetch (
-            `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${city}&lang=es`
+            `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${city}&lang=en`
          );
 
          if (!response.ok) throw new Error ("Ciudad no encontrada");
@@ -66,7 +66,7 @@ function  MainView () {
                         fetchWeather();
                      }
                   }}
-                  placeholder="Buscar ciudad"
+                  placeholder="Search City"
                   className="search-input"
                />
 
@@ -78,7 +78,7 @@ function  MainView () {
 
             {weather && (
 
-               <div className="weather-data">
+               <div className="weather-data" key = {weather.city}> 
             
                   <h2 className="city">{weather.city} {weather.countryCode && (
                      <ReactCountryFlag
@@ -98,7 +98,7 @@ function  MainView () {
                   <p className="temperature">{weather.temp}°C</p>
                   <div className="other-data">
                      <p className="description">{weather.description}</p>
-                     <p className="humidity">Humedad: {weather.humidity}%</p>
+                     <p className="humidity">Humidity: {weather.humidity}%</p>
                   </div>
                </div>
             )}
@@ -108,9 +108,16 @@ function  MainView () {
             )}
 
          </div>
+
+         <p className="dev-text">
+            Developed by Archibaldo Chim
+         </p>
+      
       
       </div>
+      
    );
+   
 
 }
 

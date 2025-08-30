@@ -136,6 +136,17 @@
   font-size: 1.3rem;
 }
 
+.dev-text{
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  text-align: center;
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin-top: 2rem;
+  font-family: sans-serif;
+}
+
 @media (max-width: 480px) {
   .card-container{
     padding: 2rem;
