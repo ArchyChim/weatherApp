@@ -1,24 +1,37 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSearch, faSpinner } from '@fortawesome/free-solid-svg-icons'
+import { faSearch, faSpinner, faSun, faMoon } from '@fortawesome/free-solid-svg-icons'
 import ReactCountryFlag from "react-country-flag";
 import axios from "axios";
 
-function  MainView () {
+function MainView() {
    const [city, setCity] = useState("");
    const [weather, setWeather] = useState(null);
-   const [error, setError] =  useState(null);
+   const [error, setError] = useState(null);
    const [isLoading, setIsLoading] = useState(false);
+   const [isDarkMode, setIsDarkMode] = useState(() => {
+      const saved = localStorage.getItem('theme');
+      return saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+   });
+
+   useEffect(() => {
+      document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+      localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+   }, [isDarkMode]);
+
+   const toggleTheme = () => {
+      setIsDarkMode(!isDarkMode);
+   };
 
    const fetchWeather = async () => {
       setIsLoading(true);
       try {
          const API_KEY = "379a02cbe90444e4abf15914252607";
-         const response = await fetch (
+         const response = await fetch(
             `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${city}&lang=en`
          );
 
-         if (!response.ok) throw new Error ("Ciudad no encontrada");
+         if (!response.ok) throw new Error("Ciudad no encontrada");
          const data = await response.json();
          console.log("Datos recibidos: ", data);
 
@@ -38,7 +51,7 @@ function  MainView () {
             icon: "https:" + data.current.condition.icon
          });
          setError(null);
-      } catch(err) {
+      } catch (err) {
          setError(err.message);
          setWeather(null);
       } finally {
@@ -47,8 +60,17 @@ function  MainView () {
    };
 
    return (
-
       <div className="weather-app">
+         {/* Animated background blob */}
+         <div className="blob-third"></div>
+
+         {/* Theme Toggle Button */}
+         <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme">
+            <FontAwesomeIcon
+               icon={isDarkMode ? faSun : faMoon}
+               style={{ color: isDarkMode ? '#fbbf24' : '#6366f1' }}
+            />
+         </button>
 
          <div className="card-container">
             <header className="header">
@@ -56,12 +78,11 @@ function  MainView () {
             </header>
 
             <div className="search-wrapper">
-               
                <input
                   type="text"
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  onKeyDown={(e)=> {
+                  onKeyDown={(e) => {
                      if (e.key === "Enter") {
                         fetchWeather();
                      }
@@ -71,15 +92,12 @@ function  MainView () {
                />
 
                <span className="search-icon" onClick={fetchWeather}>
-                  <FontAwesomeIcon icon={isLoading ? faSpinner: faSearch} spin={isLoading}/>
-               </span> 
-
+                  <FontAwesomeIcon icon={isLoading ? faSpinner : faSearch} spin={isLoading} />
+               </span>
             </div>
 
             {weather && (
-
-               <div className="weather-data" key = {weather.city}> 
-            
+               <div className="weather-data" key={weather.city}>
                   <h2 className="city">{weather.city} {weather.countryCode && (
                      <ReactCountryFlag
                         countryCode={weather.countryCode}
@@ -106,19 +124,13 @@ function  MainView () {
             {error && (
                <p className="error">{error}</p>
             )}
-
          </div>
 
          <p className="dev-text">
             Developed by Archibaldo Chim
          </p>
-      
-      
       </div>
-      
    );
-   
-
 }
 
 export default MainView

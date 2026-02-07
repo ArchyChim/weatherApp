@@ -3,16 +3,11 @@ import './App.css'
 
 
 function App() {
-  
+  // TODO: Try to add IA for the App!
   return (
     <>
-    <MainView />
+      <MainView />
     </>
-
-    /*Try to add IA for the App!*/ 
-
-
-
   )
 
 }
